@@ -21,8 +21,8 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
-def failure(gap: float, cpw: float) -> bool:
-    return gap >= 6 or cpw < 0.2
+def failure(gap: float, cpw: float, span: float) -> bool:
+    return gap >= 6 or (span >= 90 and cpw < 0.2)
 
 
 def main() -> int:
@@ -47,6 +47,7 @@ def main() -> int:
 
     gap = float(params.get("inputs", {}).get("max_gap_months") or 0)
     cpw = float(params.get("inputs", {}).get("commits_per_week_point") or 0)
+    span = float(params.get("inputs", {}).get("span_days") or 0)
 
     variables = []
 
@@ -57,7 +58,7 @@ def main() -> int:
                 "name": "max_gap_months",
                 "baseline_band": [max(gap - 1, 0), gap + 1],
                 "delta": delta,
-                "outcome_band": ["survives" if not failure(new_gap, cpw) else "fails"] * 2,
+                "outcome_band": ["survives" if not failure(new_gap, cpw, span) else "fails"] * 2,
                 "notes": f"counterfactual gap={new_gap}",
             }
         )
@@ -69,7 +70,7 @@ def main() -> int:
                 "name": "commits_per_week",
                 "baseline_band": params.get("bands", {}).get("commits_per_week", [cpw, cpw]),
                 "delta": delta,
-                "outcome_band": ["survives" if not failure(gap, new_cpw) else "fails"] * 2,
+                "outcome_band": ["survives" if not failure(gap, new_cpw, span) else "fails"] * 2,
                 "notes": f"counterfactual cpw={round(new_cpw, 3)}",
             }
         )

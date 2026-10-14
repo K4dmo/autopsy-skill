@@ -43,13 +43,15 @@ def main() -> int:
 
     gap = int(params.get("inputs", {}).get("max_gap_months") or 0)
     cpw = float(params.get("inputs", {}).get("commits_per_week_point") or 0)
-    # Reproduce "failure" if long inactivity gap OR collapse to near-zero activity
-    passed = gap >= 6 or cpw < 0.2
+    span = int(params.get("inputs", {}).get("span_days") or 0)
+    # Reproduce "failure" if long inactivity gap OR sustained near-zero activity on a mature timeline
+    matured = span >= 90
+    passed = gap >= 6 or (matured and cpw < 0.2)
     reason = []
     if gap >= 6:
         reason.append(f"gap_months={gap} >= 6")
-    if cpw < 0.2:
-        reason.append(f"commits_per_week={cpw} < 0.2")
+    if matured and cpw < 0.2:
+        reason.append(f"commits_per_week={cpw} < 0.2 over span_days={span}")
     if not reason:
         reason.append("activity still healthy under proxy rules — failure not reproduced")
 
