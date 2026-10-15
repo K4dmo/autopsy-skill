@@ -22,6 +22,7 @@ Artefatos em `autopsy/<slug>/`:
 - `judgment.md` — pós-mortem + advogado do diabo
 - `simulation.md` / `sensitivity.json` — contrafactuais (se backtest passar)
 - `verdict.md` + `assumptions.md` — veredito frio
+- `report.html` — relatório visual/interativo (também copiado para a Área de Trabalho / Desktop)
 
 ## Estrutura
 
@@ -37,7 +38,10 @@ python scripts/funnel_model.py --out autopsy/<slug>
 python scripts/backtest.py --out autopsy/<slug>
 python scripts/sensitivity.py --out autopsy/<slug>
 python scripts/validate_report.py --out autopsy/<slug>
+python scripts/export_html.py --out autopsy/<slug>
 ```
+
+O export gera `autopsy/<slug>/report.html` e `~/Desktop/autopsy-<slug>-YYYYMMDD-HHMM.html` (navegação por seções, filtro de evidências, seções recolhíveis, impressão/PDF). Use `--no-desktop` para pular a cópia na Área de Trabalho.
 
 Requisitos: Python 3.10+, `git` no PATH; `gh` opcional para issues.
 

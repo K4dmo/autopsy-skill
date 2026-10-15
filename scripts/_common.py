@@ -19,6 +19,24 @@ def ensure_dir(path: Path) -> Path:
     return path
 
 
+def desktop_dir() -> Path:
+    """Resolve the user's Desktop (Área de Trabalho) folder across locales."""
+    home = Path.home()
+    candidates = [
+        home / "Desktop",
+        home / "Área de Trabalho",
+        home / "Escritorio",
+        home / "Bureau",
+    ]
+    for path in candidates:
+        if path.is_dir():
+            return path
+    # macOS often keeps Desktop even when Finder shows a localized name
+    fallback = home / "Desktop"
+    ensure_dir(fallback)
+    return fallback
+
+
 def write_json(path: Path, data: Any) -> None:
     ensure_dir(path.parent)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

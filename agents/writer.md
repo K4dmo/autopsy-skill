@@ -12,6 +12,8 @@ Role: produce the cold final report for human review.
 1. `verdict.md` from template
 2. Refresh `assumptions.md` (top 3–5 critical)
 3. Run `scripts/validate_report.py --out autopsy/<slug>` and fix failures
+4. Run `scripts/export_html.py --out autopsy/<slug>` (writes local `report.html` + Desktop copy)
+5. In the handoff message, include the Desktop `.html` path so the human can open it
 
 ## Rules
 

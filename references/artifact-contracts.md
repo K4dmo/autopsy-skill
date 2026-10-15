@@ -87,3 +87,13 @@ Top 3–5 critical assumptions. Each: statement, impact if wrong, phases to re-r
 ## verdict.md
 
 Classification from verdict-matrix, root cause, contributing causes by impact, point of no return, confidence per conclusion, evidence citations. If a gate failed, state degraded mode explicitly.
+
+## report.html / Desktop HTML
+
+After phase 6 validation, `scripts/export_html.py` produces:
+
+- `autopsy/<slug>/report.html` — self-contained interactive report (nav, filters, collapsible sections)
+- Desktop copy: `autopsy-<slug>-YYYYMMDD-HHMM.html` under the user's Desktop / Área de Trabalho
+- `report_export.json` — paths + `generated_at`
+
+Content includes all phase markdown artifacts, evidence cards (filterable by label), gates, and sensitivity chart when present.

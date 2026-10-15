@@ -45,7 +45,7 @@ Slug: basename of target, sanitized (`[^a-zA-Z0-9._-]` → `-`).
 | 3 | Pré-mortem | [agents/premortem.md](agents/premortem.md) | `hypotheses.md` |
 | 4 | Pós-mortem | [agents/judge.md](agents/judge.md) | `judgment.md` |
 | 5 | Simulação | [agents/modeler.md](agents/modeler.md) | `simulation.md`, `sensitivity.json` |
-| 6 | Veredito | [agents/writer.md](agents/writer.md) + devil advocate | `verdict.md`, `assumptions.md` |
+| 6 | Veredito | [agents/writer.md](agents/writer.md) + devil advocate | `verdict.md`, `assumptions.md`, `report.html` + Desktop HTML |
 
 Hard rules:
 
@@ -66,9 +66,12 @@ python scripts/funnel_model.py --out autopsy/<slug>
 python scripts/backtest.py --out autopsy/<slug>
 python scripts/sensitivity.py --out autopsy/<slug>
 python scripts/validate_report.py --out autopsy/<slug>
+python scripts/export_html.py --out autopsy/<slug>
 ```
 
 Skip `collect_issues.py` gracefully if `gh` unavailable or not a GitHub remote.
+
+`export_html.py` writes `autopsy/<slug>/report.html` and a dated copy to the user's Desktop (`~/Desktop` / Área de Trabalho): `autopsy-<slug>-YYYYMMDD-HHMM.html`. Use `--no-desktop` only if Desktop copy must be skipped.
 
 ## Gates (graceful degradation)
 
@@ -80,7 +83,7 @@ Skip `collect_issues.py` gracefully if `gh` unavailable or not a GitHub remote.
 
 Evidence sufficient heuristic (also in collector): ≥15 `fato` items across ≥2 sources, OR ≥25 `fato` from git alone, AND last activity / lifespan inferable.
 
-After phase 4, run devil advocate ([agents/devil-advocate.md](agents/devil-advocate.md)) before locking root cause. After phase 6, run `validate_report.py`.
+After phase 4, run devil advocate ([agents/devil-advocate.md](agents/devil-advocate.md)) before locking root cause. After phase 6, run `validate_report.py`, then **always** run `export_html.py` so the human gets a visual interactive HTML on the Desktop.
 
 ## State & resume
 
@@ -107,4 +110,6 @@ After phase 4, run devil advocate ([agents/devil-advocate.md](agents/devil-advoc
 
 ## Final handoff
 
-Present `verdict.md` + top assumptions for human review (≤10 min). Do not ask extra questions unless the target path is missing.
+1. Run `python scripts/export_html.py --out autopsy/<slug>`.
+2. Present Desktop HTML path + `verdict.md` + top assumptions for human review (≤10 min).
+3. Do not ask extra questions unless the target path is missing.
